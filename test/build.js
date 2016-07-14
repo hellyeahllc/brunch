@@ -29,6 +29,59 @@ test.afterEach.always(() => {
   teardownTestDir();
 });
 
+test.serial.cb('.include getter', t => {
+  fixturify.writeSync('.', {
+    'package.json': `{
+      "name": "brunch-app",
+      "description": "Description",
+      "author": "Your Name",
+      "version": "0.1.0",
+      "dependencies": {},
+      "devDependencies": {
+        "javascript-brunch": "^2.0.0",
+        "temp-brunch": "file:temp-brunch"
+      }
+    }`,
+    'brunch-config.js': `module.exports = {
+      files: {
+        javascripts: {
+          joinTo: 'app.js'
+        }
+      }
+    };`,
+    'temp-brunch': {
+      'package.json': `{
+        "name": "temp-brunch",
+        "version": "0.0.1",
+        "main": "index.js"
+      }`,
+      'index.js': `'use strict';
+        class TempCompiler {
+          compile(file) {
+            return Promise.resolve(file);
+          }
+          get include() {
+            return [ __dirname + '/pow.js' ];
+          }
+        }
+
+        TempCompiler.prototype.brunchPlugin = true;
+        TempCompiler.prototype.type = 'javascript';
+        TempCompiler.prototype.extension = 'js';
+
+        module.exports = TempCompiler;
+      `,
+      'pow.js': 'window.pow = Math.pow;'
+    }
+  });
+
+  brunch.build({}, () => {
+    fileExists(t, 'public/app.js');
+    fileContains(t, 'public/app.js', 'Math.pow');
+    t.end();
+  });
+});
+
 test.serial.cb('basic build', t => {
   fixturify.writeSync('.', {
     'brunch-config.js': `module.exports = {
@@ -388,7 +441,7 @@ test.serial.cb('npm integration', t => {
       // finally, modules with .js in their name are correctly processed
       contains('require.alias("bignumber.js/bignumber.js", "bignumber.js");');
 
-      outputContains(t, /compiled (180|181) files into app\.js/);
+      outputContains(t, /compiled (\d{3}) files into app\.js/);
       noError(t);
 
       t.end();
@@ -654,6 +707,32 @@ test.serial.cb('reuse javascripts.joinTo only if templates.joinTo are empty', t 
   brunch.build({}, () => {
     fileContains(t, 'public/templates.js', 'hello^world');
     fileContains(t, 'public/templates.js', 'module^exports');
+    t.end();
+  });
+});
+
+test.serial.cb('inline source maps', t => {
+  fixturify.writeSync('.', {
+    'brunch-config.js': `module.exports = {
+      sourceMaps: 'inline',
+      files: {
+        javascripts: {
+          joinTo: 'app.js'
+        }
+      }
+    };`,
+    app: {
+      'initialize.js': 'console.log("hello world")'
+    }
+  });
+
+  brunch.build({}, () => {
+    fileDoesNotExist(t, 'public/app.js.map');
+    fileContains(t, 'public/app.js', '//# sourceMappingURL=data:application/json;charset=utf-8;base64,');
+
+    noWarn(t);
+    noError(t);
+
     t.end();
   });
 });
