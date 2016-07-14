@@ -29,6 +29,141 @@ test.afterEach.always(() => {
   teardownTestDir();
 });
 
+// test.serial.cb('.include getter', t => {
+//   fixturify.writeSync('.', {
+//     'package.json': `{
+//       "name": "brunch-app",
+//       "description": "Description",
+//       "author": "Your Name",
+//       "version": "0.1.0",
+//       "dependencies": {},
+//       "devDependencies": {
+//         "javascript-brunch": "^2.0.0",
+//         "temp-brunch": "file:temp-brunch"
+//       }
+//     }`,
+//     'brunch-config.js': `module.exports = {
+//       files: {
+//         javascripts: {
+//           joinTo: 'app.js'
+//         }
+//       }
+//     };`,
+//     node_modules: {
+//       'some-dep': {
+//         'package.json': `{
+//           "name": "some-dep",
+//           "version": "0.0.1",
+//           "main": "index.js"
+//         }`,
+//         'index.js': `require('hahahaha')`
+//       }
+//     },
+//     'temp-brunch': {
+//       'package.json': `{
+//         "name": "temp-brunch",
+//         "version": "0.0.1",
+//         "main": "index.js"
+//       }`,
+//       'index.js': `'use strict';
+//         class TempCompiler {
+//           compile(file) {
+//             return Promise.resolve(file);
+//           }
+//           get include() {
+//             return ['some-dep'];
+//           }
+//         }
+
+//         TempCompiler.prototype.brunchPlugin = true;
+//         TempCompiler.prototype.type = 'javascript';
+//         TempCompiler.prototype.extension = 'js';
+
+//         module.exports = TempCompiler;
+//       `
+//     },
+//     app: {
+//       assets: {
+//         'index.html': '<h1>hello world</h1>'
+//       },
+//       'initialize.js': 'console.log("hello world")',
+//       'skip.js': 'require("some-dep")'
+//     }
+//   });
+
+//   brunch.build({}, () => {
+//     fileExists(t, 'public/app.js.map');
+//     fileContains(t, 'public/app.js', `
+// require.register("initialize.js", function(exports, require, module) {
+// console.log("hello world")
+// });`);
+
+//     fileContains(t, 'public/index.html', '<h1>hello world</h1>');
+
+//     noWarn(t);
+//     noError(t);
+
+//     t.end();
+//   });
+  // fixturify.writeSync('.', {
+  //   'package.json': `{
+  //     "name": "brunch-app",
+  //     "description": "Description",
+  //     "author": "Your Name",
+  //     "version": "0.1.0",
+  //     "dependencies": {},
+  //     "devDependencies": {
+  //       "javascript-brunch": "^2.0.0"
+  //     }
+  //   }`,
+  //   'brunch-config.js': `module.exports = {
+  //     javascripts: {
+  //       joinTo: 'scripts.js'
+  //     }
+  //   };`,
+  //   app: {
+  //     'initialize.js': 'console.log("hello world")'
+  //   }
+  //   // node_modules: {
+  //   //   hello: {
+  //   //     'world.js': `require('this-will-fail-unless-include is respected')`
+  //   //   }
+  //   // },
+  //   // 'temp-brunch': {
+  //   //   'package.json': `{
+  //   //     "name": "temp-brunch",
+  //   //     "version": "0.0.1",
+  //   //     "main": "index.js"
+  //   //   }`,
+  //   //   'index.js': `'use strict';
+  //   //     class TempCompiler {
+  //   //       compile(file) {
+  //   //         return Promise.resolve(file);
+  //   //       }
+  //   //       // get include() {
+  //   //       //   return ['hello'];
+  //   //       // }
+  //   //     }
+
+  //   //     TempCompiler.prototype.brunchPlugin = true;
+  //   //     TempCompiler.prototype.type = 'javascript';
+  //   //     TempCompiler.prototype.extension = 'js';
+
+  //   //     module.exports = TempCompiler;
+  //   //   `
+  //   // }
+  // });
+
+  // try {
+  //   brunch.build({}, () => {
+  //     fileExists(t, 'public/scripts.js');
+  //     t.end();
+  //   });
+  // } catch (error) {
+  //   console.log(87967876892345789623457, error);
+  // }
+// });
+
 test.serial.cb('basic build', t => {
   fixturify.writeSync('.', {
     'brunch-config.js': `module.exports = {
