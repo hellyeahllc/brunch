@@ -54,7 +54,7 @@
     "chokidar": "^1.6",
     "coffee-script": "~1.12.7",
     "commander": "~2.9",
-    "commonjs-require-definition": "~0.6.2",
+    "commonjs-require-definition": "brunch/commonjs-require-definition#ignore-case",
     "debug": "~2.2",
     "deppack": "brunch/deppack#ignore-case",
     "deps-install": "~0.1",
