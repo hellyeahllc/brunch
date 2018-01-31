@@ -56,7 +56,7 @@
     "commander": "~2.9",
     "commonjs-require-definition": "~0.6.2",
     "debug": "~2.2",
-    "deppack": "~0.7",
+    "deppack": "brunch/deppack#ignore-case",
     "deps-install": "~0.1",
     "fcache": "~0.3",
     "init-skeleton": "~1.0",
